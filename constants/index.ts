@@ -1,0 +1,1 @@
+export { fallbackPortfolioData } from "./portfolio";

@@ -1,0 +1,40 @@
+export const siteConfig = {
+  name: "Kishore B",
+  title: "Kishore B — Frontend Developer",
+  description:
+    "Frontend Developer specializing in React, Next.js, and TypeScript. Building scalable, performant web applications for enterprise platforms serving 3000+ users.",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://kishoreb.dev",
+  ogImage: "/og-image.png",
+  locale: "en_US",
+  keywords: [
+    "Kishore B",
+    "Frontend Developer",
+    "React Developer",
+    "Next.js Developer",
+    "TypeScript",
+    "Chennai",
+    "Portfolio",
+    "Web Developer",
+    "UI Engineer",
+  ],
+  author: {
+    name: "Kishore B",
+    email: "kishore@example.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://kishoreb.dev",
+    jobTitle: "Frontend Developer",
+    location: "Chennai, Tamil Nadu, India",
+  },
+  social: {
+    github: "https://github.com/kishoreb",
+    linkedin: "https://linkedin.com/in/kishoreb",
+    twitter: "https://twitter.com/kishoreb",
+  },
+  navigation: [
+    { label: "Home", href: "#hero" },
+    { label: "About", href: "#about" },
+    { label: "Experience", href: "#experience" },
+    { label: "Skills", href: "#skills" },
+    { label: "Projects", href: "#projects" },
+    { label: "Contact", href: "#contact" },
+  ],
+} as const;
