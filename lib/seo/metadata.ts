@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config";
-import type { SeoSettings } from "@/types";
+import type { PersonalInfo } from "@/types";
 
 interface BuildMetadataOptions {
   title?: string;
@@ -9,7 +9,7 @@ interface BuildMetadataOptions {
   keywords?: string[];
   path?: string;
   ogImage?: string;
-  seo?: SeoSettings;
+  personalInfo?: PersonalInfo;
 }
 
 export function buildMetadata({
@@ -18,12 +18,15 @@ export function buildMetadata({
   keywords,
   path = "",
   ogImage,
-  seo,
+  personalInfo,
 }: BuildMetadataOptions = {}): Metadata {
-  const resolvedTitle = title ?? seo?.defaultTitle ?? siteConfig.title;
-  const resolvedDescription =
-    description ?? seo?.defaultDescription ?? siteConfig.description;
-  const resolvedKeywords = keywords ?? seo?.keywords ?? siteConfig.keywords;
+  const resolvedTitle =
+    title ??
+    (personalInfo
+      ? `${personalInfo.name} — ${personalInfo.role}`
+      : siteConfig.title);
+  const resolvedDescription = description ?? siteConfig.description;
+  const resolvedKeywords = keywords ?? siteConfig.keywords;
   const url = `${siteConfig.url}${path}`;
   const image = ogImage ?? siteConfig.ogImage;
 
@@ -31,8 +34,13 @@ export function buildMetadata({
     title: resolvedTitle,
     description: resolvedDescription,
     keywords: [...resolvedKeywords],
-    authors: [{ name: siteConfig.author.name, url: siteConfig.author.url }],
-    creator: siteConfig.author.name,
+    authors: [
+      {
+        name: personalInfo?.name ?? siteConfig.author.name,
+        url: siteConfig.author.url,
+      },
+    ],
+    creator: personalInfo?.name ?? siteConfig.author.name,
     metadataBase: new URL(siteConfig.url),
     alternates: { canonical: url },
     openGraph: {
@@ -41,7 +49,7 @@ export function buildMetadata({
       url,
       title: resolvedTitle,
       description: resolvedDescription,
-      siteName: siteConfig.name,
+      siteName: personalInfo?.name ?? siteConfig.name,
       images: [{ url: image, width: 1200, height: 630, alt: resolvedTitle }],
     },
     twitter: {
@@ -49,7 +57,6 @@ export function buildMetadata({
       title: resolvedTitle,
       description: resolvedDescription,
       images: [image],
-      creator: seo?.twitterHandle,
     },
     robots: {
       index: true,

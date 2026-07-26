@@ -22,11 +22,11 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getPortfolioData();
-  return buildMetadata({ seo: data.seo });
+  return buildMetadata({ personalInfo: data.personalInfo });
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0f",
+  themeColor: "#0F0F0F",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -40,7 +40,6 @@ export default async function RootLayout({
   const data = await getPortfolioData();
   const jsonLd = buildJsonLd({
     personalInfo: data.personalInfo,
-    seo: data.seo,
   });
 
   return (
