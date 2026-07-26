@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2, ExternalLink, Users } from "lucide-react";
+import { Code2, ExternalLink } from "lucide-react";
 
 import { Section, SectionHeading } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";

@@ -1,13 +1,15 @@
 import { siteConfig } from "@/config";
-import type { PersonalInfo, SeoSettings } from "@/types";
+import type { PersonalInfo } from "@/types";
 
 interface JsonLdOptions {
   personalInfo: PersonalInfo;
-  seo?: SeoSettings;
 }
 
-export function buildJsonLd({ personalInfo, seo }: JsonLdOptions) {
-  const description = seo?.defaultDescription ?? siteConfig.description;
+export function buildJsonLd({ personalInfo }: JsonLdOptions) {
+  const sameAs = [
+    personalInfo.linkedinUrl,
+    personalInfo.instagramUrl,
+  ].filter((url): url is string => Boolean(url));
 
   return [
     {
@@ -16,14 +18,15 @@ export function buildJsonLd({ personalInfo, seo }: JsonLdOptions) {
       name: personalInfo.name,
       jobTitle: personalInfo.role,
       url: siteConfig.url,
-      email: siteConfig.author.email,
+      email: personalInfo.email,
+      telephone: personalInfo.phone,
       address: {
         "@type": "PostalAddress",
         addressLocality: "Chennai",
         addressRegion: "Tamil Nadu",
         addressCountry: "IN",
       },
-      sameAs: Object.values(siteConfig.social),
+      sameAs,
     },
     {
       "@context": "https://schema.org",
@@ -31,14 +34,14 @@ export function buildJsonLd({ personalInfo, seo }: JsonLdOptions) {
       name: `${personalInfo.name} Portfolio`,
       url: siteConfig.url,
       logo: `${siteConfig.url}/icon-512.png`,
-      description,
+      description: siteConfig.description,
     },
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      name: siteConfig.name,
+      name: personalInfo.name,
       url: siteConfig.url,
-      description,
+      description: siteConfig.description,
       author: { "@type": "Person", name: personalInfo.name },
     },
     {

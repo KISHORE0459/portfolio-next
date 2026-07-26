@@ -5,3 +5,4 @@ export { PortfolioLayout } from "./portfolio-layout";
 export { Section } from "./section";
 export { SectionHeading } from "./section-heading";
 export { Sidebar } from "./sidebar";
+export { InstagramIcon, LinkedInIcon } from "./social-icons";

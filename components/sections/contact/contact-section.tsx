@@ -1,13 +1,13 @@
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import { Section, SectionHeading } from "@/components/shared";
-import type { ContactInfo } from "@/types";
+import type { PersonalInfo } from "@/types";
 
 interface ContactSectionProps {
-  contact: ContactInfo;
+  personalInfo: PersonalInfo;
 }
 
-export function ContactSection({ contact }: ContactSectionProps) {
+export function ContactSection({ personalInfo }: ContactSectionProps) {
   return (
     <Section id="contact">
       <SectionHeading
@@ -22,27 +22,54 @@ export function ContactSection({ contact }: ContactSectionProps) {
               <Mail className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-white/50">Email</p>
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Email
+              </p>
               <a
-                href={`mailto:${contact.email}`}
+                href={`mailto:${personalInfo.email}`}
                 className="text-white transition-colors hover:text-primary"
               >
-                {contact.email}
+                {personalInfo.email}
               </a>
             </div>
           </div>
+
+          {personalInfo.phone && (
+            <div className="flex items-center gap-4">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/15">
+                <Phone className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-widest text-white/50">
+                  Phone
+                </p>
+                <a
+                  href={`tel:${personalInfo.phone.replace(/\s+/g, "")}`}
+                  className="text-white transition-colors hover:text-primary"
+                >
+                  {personalInfo.phone}
+                </a>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-4">
             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/15">
               <MapPin className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-white/50">Location</p>
-              <p className="text-white">{contact.location}</p>
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Location
+              </p>
+              <p className="text-white">{personalInfo.location}</p>
             </div>
           </div>
-          <p className="rounded-lg bg-primary/10 px-4 py-3 text-sm text-primary">
-            {contact.availability}
-          </p>
+
+          {personalInfo.availability && (
+            <p className="rounded-lg bg-primary/10 px-4 py-3 text-sm text-primary">
+              {personalInfo.availability}
+            </p>
+          )}
         </div>
       </div>
     </Section>

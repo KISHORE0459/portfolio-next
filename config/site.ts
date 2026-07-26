@@ -25,9 +25,9 @@ export const siteConfig = {
     location: "Chennai, Tamil Nadu, India",
   },
   social: {
-    github: "https://github.com/kishoreb",
     linkedin: "https://linkedin.com/in/kishoreb",
-    twitter: "https://twitter.com/kishoreb",
+    instagram: "https://instagram.com/kishoreb",
+    email: "mailto:kishore@example.com",
   },
   navigation: [
     { label: "Home", href: "#hero" },

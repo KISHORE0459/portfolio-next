@@ -14,10 +14,10 @@ function Badge({
         variant === "default" &&
           "border-transparent bg-primary/15 text-primary",
         variant === "secondary" &&
-          "border-transparent bg-secondary text-secondary-foreground",
-        variant === "outline" && "border-white/20 text-white/85",
+          "border-transparent bg-card text-foreground",
+        variant === "outline" && "border-border text-muted-foreground",
         variant === "accent" &&
-          "border-transparent bg-accent/15 text-accent",
+          "border-transparent bg-primary/15 text-accent-light",
         className,
       )}
       {...props}

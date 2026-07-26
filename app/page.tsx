@@ -14,30 +14,20 @@ export default async function HomePage() {
   const data = await getPortfolioData();
 
   return (
-    <PortfolioLayout
-      personalInfo={data.personalInfo}
-      navigation={data.navigation}
-      socialLinks={data.socialLinks}
-    >
+    <PortfolioLayout personalInfo={data.personalInfo}>
       <main>
-        {data.hero.isVisible !== false && (
-          <Hero hero={data.hero} personalInfo={data.personalInfo} />
+        {data.personalInfo.isVisible !== false && (
+          <Hero personalInfo={data.personalInfo} />
         )}
         {data.about.isVisible !== false && <About data={data.about} />}
         <ExperienceSection experiences={data.experiences} />
-        <SkillsSection technologies={data.technologies} />
+        <SkillsSection skills={data.skills} />
         <ProjectsSection projects={data.projects} />
-        {data.contact.isVisible !== false && (
-          <ContactSection contact={data.contact} />
+        {data.personalInfo.isVisible !== false && (
+          <ContactSection personalInfo={data.personalInfo} />
         )}
       </main>
-      {data.footer.isVisible !== false && (
-        <Footer
-          footer={data.footer}
-          socialLinks={data.socialLinks}
-          name={data.personalInfo.name}
-        />
-      )}
+      <Footer personalInfo={data.personalInfo} />
     </PortfolioLayout>
   );
 }
