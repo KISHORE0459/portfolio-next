@@ -8,21 +8,21 @@ export function SkillsSkeleton() {
   return (
     <Section id="skills" aria-busy="true" aria-label="Loading skills">
       <SectionHeadingSkeleton />
-      <div className="space-y-12">
+      <div className="space-y-8">
         {Array.from({ length: 3 }, (_, groupIndex) => (
-          <div key={groupIndex}>
-            <Skeleton className="mb-5 h-4 w-24" />
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          <div
+            key={groupIndex}
+            className="grid gap-4 border-t border-foreground/10 pt-8 first:border-t-0 first:pt-0 sm:grid-cols-[8rem_1fr] sm:gap-8"
+          >
+            <Skeleton className="h-4 w-20" />
+            <div className="flex flex-wrap gap-2.5">
               {Array.from({ length: 6 }, (_, index) => (
-                <li
+                <Skeleton
                   key={index}
-                  className="flex flex-col items-center gap-3 px-3 py-4"
-                >
-                  <Skeleton className="h-12 w-12 rounded-full" />
-                  <Skeleton className="h-4 w-16" />
-                </li>
+                  className="h-9 w-24 rounded-full"
+                />
               ))}
-            </ul>
+            </div>
           </div>
         ))}
       </div>
