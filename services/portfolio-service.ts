@@ -1,7 +1,13 @@
+import { unstable_cache } from "next/cache";
+import { cache } from "react";
+
 import { fallbackPortfolioData } from "@/constants";
 import { getSanityClient } from "@/sanity/client";
 import { portfolioQuery } from "@/sanity/queries";
 import type { AboutSection, PersonalInfo, PortfolioData } from "@/types";
+
+export const PORTFOLIO_CACHE_TAG = "portfolio";
+export const PORTFOLIO_REVALIDATE_SECONDS = 3600;
 
 type SanityPortfolioResponse = {
   [K in keyof PortfolioData]: PortfolioData[K] | null;
@@ -64,20 +70,50 @@ function mergeWithFallback(
       data.projects && data.projects.length > 0
         ? data.projects
         : fallbackPortfolioData.projects,
+    // Keep an empty list when Sanity has no blogs so the empty state can show.
+    blogs: data.blogs ?? [],
   };
 }
 
-export async function getPortfolioData(): Promise<PortfolioData> {
+async function fetchPortfolioFromSanity(): Promise<SanityPortfolioResponse | null> {
   const client = getSanityClient();
 
   if (!client) {
+    return null;
+  }
+
+  return client.fetch<SanityPortfolioResponse>(
+    portfolioQuery,
+    {},
+    {
+      next: {
+        revalidate: PORTFOLIO_REVALIDATE_SECONDS,
+        tags: [PORTFOLIO_CACHE_TAG],
+      },
+    },
+  );
+}
+
+const getCachedPortfolioResponse = unstable_cache(
+  async () => {
+    try {
+      return await fetchPortfolioFromSanity();
+    } catch {
+      return null;
+    }
+  },
+  ["portfolio-data"],
+  {
+    revalidate: PORTFOLIO_REVALIDATE_SECONDS,
+    tags: [PORTFOLIO_CACHE_TAG],
+  },
+);
+
+export const getPortfolioData = cache(async (): Promise<PortfolioData> => {
+  if (!getSanityClient()) {
     return fallbackPortfolioData;
   }
 
-  try {
-    const data = await client.fetch<SanityPortfolioResponse>(portfolioQuery);
-    return mergeWithFallback(data);
-  } catch {
-    return fallbackPortfolioData;
-  }
-}
+  const data = await getCachedPortfolioResponse();
+  return mergeWithFallback(data);
+});

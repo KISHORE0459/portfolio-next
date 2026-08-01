@@ -76,6 +76,18 @@ export interface Project {
   liveUrl?: string;
   githubUrl?: string;
   image?: SanityImage;
+  imageUrl?: string;
+  order: number;
+  isVisible?: boolean;
+}
+
+export interface Blog {
+  _id: string;
+  title: string;
+  description: string;
+  mediumUrl: string;
+  image?: SanityImage;
+  imageUrl?: string;
   order: number;
   isVisible?: boolean;
 }
@@ -91,4 +103,5 @@ export interface PortfolioData {
   experiences: Experience[];
   skills: Skill[];
   projects: Project[];
+  blogs: Blog[];
 }

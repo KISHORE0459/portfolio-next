@@ -1,6 +1,7 @@
 export type {
   AboutHighlight,
   AboutSection,
+  Blog,
   Experience,
   NavItem,
   PersonalInfo,

@@ -279,6 +279,59 @@ export const skill = defineType({
   },
 });
 
+export const blog = defineType({
+  name: "blog",
+  title: "Blog",
+  type: "document",
+  fields: [
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      rows: 4,
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        defineField({ name: "alt", title: "Alt Text", type: "string" }),
+      ],
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "mediumUrl",
+      title: "Medium Link",
+      type: "url",
+      validation: (rule) =>
+        rule.required().uri({
+          scheme: ["http", "https"],
+        }),
+      description: "Full Medium article URL",
+    }),
+    orderField,
+    visibilityField,
+  ],
+  orderings: [
+    {
+      title: "Order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
+  ],
+  preview: {
+    select: { title: "title", subtitle: "description", media: "image" },
+  },
+});
+
 export const project = defineType({
   name: "project",
   title: "Project",
@@ -345,4 +398,5 @@ export const schemaTypes = [
   skillTag,
   skill,
   project,
+  blog,
 ];

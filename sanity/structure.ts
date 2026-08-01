@@ -49,6 +49,7 @@ export const deskStructure: StructureResolver = (S, context) =>
             ]),
         ),
       S.documentTypeListItem("project").title("Projects"),
+      S.documentTypeListItem("blog").title("Blogs"),
     ]);
 
 export { singletonTypes };
