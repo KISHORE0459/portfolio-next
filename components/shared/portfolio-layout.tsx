@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { CursorGlow } from "@/components/shared/cursor-glow";
 import { Footer } from "@/components/shared/footer";
 import { Sidebar } from "@/components/shared/sidebar";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -16,13 +17,14 @@ export function PortfolioLayout({
   personalInfo,
 }: PortfolioLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      <CursorGlow />
       <ThemeToggle />
       <Sidebar
         personalInfo={personalInfo}
         navigation={[...siteConfig.navigation]}
       />
-      <div className="flex min-h-screen flex-col lg:pl-[260px]">
+      <div className="relative z-10 flex min-h-screen flex-col lg:pl-[260px]">
         <div className="flex-1">{children}</div>
         <Footer personalInfo={personalInfo} />
       </div>

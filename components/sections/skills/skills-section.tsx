@@ -7,27 +7,32 @@ interface SkillsSectionProps {
   skills: Skill[];
 }
 
-function SkillIcon({ skill }: { skill: Skill }) {
-  if (skill.iconUrl) {
-    return (
-      <Image
-        src={skill.iconUrl}
-        alt={`${skill.name} icon`}
-        width={48}
-        height={48}
-        className="h-12 w-12 object-contain transition-transform duration-300 ease-out group-hover:scale-110"
-        unoptimized
-      />
-    );
-  }
-
+function SkillPill({ skill }: { skill: Skill }) {
   return (
-    <span
-      className="flex h-12 w-12 items-center justify-center rounded-full bg-card text-sm font-semibold text-primary transition-transform duration-300 ease-out group-hover:scale-110"
-      aria-hidden="true"
-    >
-      {skill.name.slice(0, 2).toUpperCase()}
-    </span>
+    <li>
+      <div className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 transition-colors duration-200 hover:border-primary/40 hover:bg-primary/10">
+        {skill.iconUrl ? (
+          <Image
+            src={skill.iconUrl}
+            alt=""
+            width={18}
+            height={18}
+            className="h-[18px] w-[18px] object-contain"
+            unoptimized
+          />
+        ) : (
+          <span
+            className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary/15 text-[9px] font-semibold text-primary"
+            aria-hidden="true"
+          >
+            {skill.name.slice(0, 1).toUpperCase()}
+          </span>
+        )}
+        <span className="text-sm text-foreground/80 transition-colors group-hover:text-primary">
+          {skill.name}
+        </span>
+      </div>
+    </li>
   );
 }
 
@@ -47,32 +52,28 @@ export function SkillsSection({ skills }: SkillsSectionProps) {
         title="Skills"
         description="Technologies I use to build modern web applications."
       />
-      <div className="space-y-12">
-        {tags.map((tag) => (
-          <div key={tag._id} className="flex flex-col gap-5">
-            <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-primary">
-              {tag.title}
-            </h3>
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              {visible
-                .filter((skill) => skill.tag._id === tag._id)
-                .map((skill) => (
-                  <li key={skill._id}>
-                    <div className="group relative flex h-full cursor-pointer flex-col items-center gap-3 rounded-xl border border-transparent px-3 py-4 text-center transition-all duration-300 ease-out hover:-translate-y-1 ">
-                      <SkillIcon skill={skill} />
-                      <span className="text-sm font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
-                        {skill.name}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-x-5 bottom-0 h-[3px] origin-center scale-x-0 rounded-full bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100"
-                      />
-                    </div>
-                  </li>
+      <div className="space-y-8">
+        {tags.map((tag) => {
+          const groupSkills = visible.filter(
+            (skill) => skill.tag._id === tag._id,
+          );
+
+          return (
+            <div
+              key={tag._id}
+              className="grid gap-4 border-t border-foreground/10 pt-8 first:border-t-0 first:pt-0 sm:grid-cols-[8rem_1fr] sm:gap-8"
+            >
+              <h3 className="font-mono text-xs font-medium uppercase tracking-widest text-primary sm:pt-1.5">
+                {tag.title}
+              </h3>
+              <ul className="flex flex-wrap gap-2.5">
+                {groupSkills.map((skill) => (
+                  <SkillPill key={skill._id} skill={skill} />
                 ))}
-            </ul>
-          </div>
-        ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </Section>
   );

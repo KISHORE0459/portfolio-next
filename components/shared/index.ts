@@ -1,4 +1,5 @@
 export { Container } from "./container";
+export { CursorGlow } from "./cursor-glow";
 export { EditorialEntry } from "./editorial-entry";
 export { Footer } from "./footer";
 export { JsonLdScript } from "./json-ld-script";
