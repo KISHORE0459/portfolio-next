@@ -2,17 +2,16 @@
 
 import { Mail, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   InstagramIcon,
   LinkedInIcon,
 } from "@/components/shared/social-icons";
-import { useActiveSection } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { NavItem, PersonalInfo } from "@/types";
 import { getNavIcon } from "@/utils/nav-icons";
-import { scrollToSection } from "@/utils/scroll-to-section";
 
 interface SidebarProps {
   personalInfo: PersonalInfo;
@@ -54,10 +53,14 @@ function SocialIcon({
   return <Mail className={className} />;
 }
 
+function isActivePath(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function Sidebar({ personalInfo, navigation }: SidebarProps) {
+  const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const sectionIds = navigation.map((item) => item.href.replace("#", ""));
-  const activeSection = useActiveSection(sectionIds);
 
   const sidebarSocials = useMemo((): SidebarSocialItem[] => {
     const items: SidebarSocialItem[] = [];
@@ -95,39 +98,27 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
     return items;
   }, [personalInfo]);
 
-  const handleNavClick = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-      event.preventDefault();
-      if (scrollToSection(href)) {
-        setIsMobileOpen(false);
-      }
-    },
-    [],
-  );
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isMobileOpen);
     return () => document.body.classList.remove("overflow-hidden");
   }, [isMobileOpen]);
 
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const timer = setTimeout(() => scrollToSection(hash), 150);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
   const sidebarContent = (
     <div className="flex h-full flex-col px-5 py-8">
       <div className="text-center">
-        <ProfileAvatar name={personalInfo.name} />
-        <h2 className="mt-3 text-base font-semibold text-foreground">
-          {personalInfo.name}
-        </h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          {personalInfo.role}
-        </p>
+        <Link href="/" className="inline-block" onClick={() => setIsMobileOpen(false)}>
+          <ProfileAvatar name={personalInfo.name} />
+          <h2 className="mt-3 text-base font-semibold text-foreground">
+            {personalInfo.name}
+          </h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {personalInfo.role}
+          </p>
+        </Link>
       </div>
 
       <ul className="mt-4 flex justify-center gap-2" aria-label="Social links">
@@ -149,15 +140,13 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
       <nav className="mt-8 flex-1" aria-label="Main navigation">
         <ul className="space-y-1">
           {navigation.map((item) => {
-            const sectionId = item.href.replace("#", "");
-            const isActive = activeSection === sectionId;
+            const isActive = isActivePath(pathname, item.href);
             const Icon = getNavIcon(item.label);
 
             return (
               <li key={item.href}>
-                <a
+                <Link
                   href={item.href}
-                  onClick={(event) => handleNavClick(event, item.href)}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                     isActive
@@ -168,7 +157,7 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
                 >
                   <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                   {item.label}
-                </a>
+                </Link>
               </li>
             );
           })}
@@ -192,7 +181,7 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
       {isMobileOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-[var(--overlay)] backdrop-blur-sm lg:hidden"
           onClick={() => setIsMobileOpen(false)}
           aria-label="Close menu overlay"
         />

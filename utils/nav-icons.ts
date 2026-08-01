@@ -4,6 +4,7 @@ import {
   FolderKanban,
   Home,
   Mail,
+  Newspaper,
   User,
   type LucideIcon,
 } from "lucide-react";
@@ -14,6 +15,7 @@ const navIconMap: Record<string, LucideIcon> = {
   Experience: Briefcase,
   Skills: Code2,
   Projects: FolderKanban,
+  Blogs: Newspaper,
   Contact: Mail,
 };
 

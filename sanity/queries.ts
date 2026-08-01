@@ -16,5 +16,26 @@ export const portfolioQuery = `{
     "tag": tag->{ _id, title, orderRank },
     "iconUrl": icon.asset->url
   } | order(orderRank asc),
-  "projects": *[_type == "project" && isVisible != false] | order(order asc)
+  "projects": *[_type == "project" && isVisible != false]{
+    _id,
+    title,
+    description,
+    techStack,
+    liveUrl,
+    githubUrl,
+    order,
+    isVisible,
+    image,
+    "imageUrl": image.asset->url
+  } | order(order asc),
+  "blogs": *[_type == "blog" && isVisible != false]{
+    _id,
+    title,
+    description,
+    mediumUrl,
+    order,
+    isVisible,
+    image,
+    "imageUrl": image.asset->url
+  } | order(order asc)
 }`;

@@ -6,8 +6,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
+        pathname: "/images/**",
       },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
   },
 };
 

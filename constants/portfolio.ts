@@ -10,11 +10,10 @@ export const fallbackPortfolioData: PortfolioData = {
     experienceYears: "1.5+",
     location: "Chennai, Tamil Nadu, India",
     heroDescription:
-      "Building modern frontend experiences with React, Next.js & Node.js, where clean design meets scalable engineering.",
+      "Building modern frontend experiences where clean design meets scalable engineering.",
     linkedinUrl: "https://linkedin.com/in/kishoreb",
     instagramUrl: "https://instagram.com/kishoreb",
     resumeUrl: "/resume.pdf",
-    availability: "Open to opportunities",
     isVisible: true,
   },
   about: {
@@ -98,7 +97,13 @@ export const fallbackPortfolioData: PortfolioData = {
         "Created RESTful APIs with Express.js and MongoDB",
         "Developed reusable UI components with responsive design patterns",
       ],
-      technologies: ["React.js", "Node.js", "Express.js", "MongoDB", "Razorpay"],
+      technologies: [
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Razorpay",
+      ],
       order: 2,
       isVisible: true,
     },
@@ -195,7 +200,13 @@ export const fallbackPortfolioData: PortfolioData = {
       title: "Social Media Application",
       description:
         "A full-featured social platform with real-time interactions, media sharing, and an intuitive feed experience built for performance at scale.",
-      techStack: ["React.js", "Node.js", "MongoDB", "REST APIs", "Tailwind CSS"],
+      techStack: [
+        "React.js",
+        "Node.js",
+        "MongoDB",
+        "REST APIs",
+        "Tailwind CSS",
+      ],
       githubUrl: "https://github.com/kishoreb",
       order: 1,
       isVisible: true,
@@ -217,4 +228,5 @@ export const fallbackPortfolioData: PortfolioData = {
       isVisible: true,
     },
   ],
+  blogs: [],
 };
