@@ -71,12 +71,12 @@ export const siteConfig = {
     "Web Application Development",
   ],
   navigation: [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Experience", href: "/experience" },
-    { label: "Skills", href: "/skills" },
+    { label: "Home", href: "/#hero" },
+    { label: "About", href: "/#about" },
+    { label: "Experience", href: "/#experience" },
+    { label: "Skills", href: "/#skills" },
     { label: "Projects", href: "/projects" },
     { label: "Blogs", href: "/blogs" },
-    { label: "Contact", href: "/contact" },
+    { label: "Contact", href: "/#contact" },
   ],
 } as const;

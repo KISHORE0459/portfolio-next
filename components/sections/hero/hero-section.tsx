@@ -9,6 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { useReducedMotion } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { PersonalInfo } from "@/types";
+import { scrollToSection } from "@/utils/scroll-to-section";
 
 import { HeroBackground } from "./hero-background";
 import { HeroIllustration } from "./hero-illustration";
@@ -19,7 +20,7 @@ interface HeroProps {
 
 const HERO_GREETING = "Hello, I'm";
 const PRIMARY_CTA = { label: "View My Work", href: "/projects" };
-const SECONDARY_CTA = { label: "Get In Touch", href: "/contact" };
+const SECONDARY_CTA = { label: "Get In Touch", href: "#contact" };
 
 export function Hero({ personalInfo }: HeroProps) {
   const reducedMotion = useReducedMotion();
@@ -105,15 +106,19 @@ export function Hero({ personalInfo }: HeroProps) {
                 {PRIMARY_CTA.label}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link
+              <a
                 href={SECONDARY_CTA.href}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToSection(SECONDARY_CTA.href);
+                }}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
                   "w-full sm:w-auto",
                 )}
               >
                 {SECONDARY_CTA.label}
-              </Link>
+              </a>
               {personalInfo.resumeUrl && (
                 <a
                   href={personalInfo.resumeUrl}

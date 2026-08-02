@@ -15,7 +15,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn("section-padding", className)}
+      className={cn("section-padding scroll-mt-24 lg:scroll-mt-8", className)}
       {...props}
     >
       <div className={cn("container-max", containerClassName)}>{children}</div>

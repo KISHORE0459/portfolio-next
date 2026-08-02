@@ -3,15 +3,18 @@
 import { Mail, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   InstagramIcon,
   LinkedInIcon,
 } from "@/components/shared/social-icons";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { useActiveSection } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { NavItem, PersonalInfo } from "@/types";
 import { getNavIcon } from "@/utils/nav-icons";
+import { scrollToSection } from "@/utils/scroll-to-section";
 
 interface SidebarProps {
   personalInfo: PersonalInfo;
@@ -53,14 +56,45 @@ function SocialIcon({
   return <Mail className={className} />;
 }
 
-function isActivePath(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
+function getHashId(href: string): string | null {
+  if (!href.includes("#")) return null;
+  return href.split("#")[1] || null;
 }
+
+function isPageLink(href: string): boolean {
+  return !href.includes("#");
+}
+
+function getSectionIdFromHref(href: string): string | null {
+  const hashId = getHashId(href);
+  if (hashId) return hashId;
+  if (href.startsWith("/")) {
+    const segment = href.replace(/^\//, "").split("/")[0];
+    return segment || null;
+  }
+  return null;
+}
+
+const HOME_SCROLL_SECTIONS = [
+  "hero",
+  "about",
+  "experience",
+  "skills",
+  "projects",
+  "blogs",
+  "contact",
+] as const;
 
 export function Sidebar({ personalInfo, navigation }: SidebarProps) {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [hash, setHash] = useState("");
+
+  const homeSectionIds = useMemo(() => [...HOME_SCROLL_SECTIONS], []);
+
+  const activeSection = useActiveSection(
+    pathname === "/" ? homeSectionIds : [],
+  );
 
   const sidebarSocials = useMemo((): SidebarSocialItem[] => {
     const items: SidebarSocialItem[] = [];
@@ -107,10 +141,76 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isMobileOpen]);
 
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash.replace("#", ""));
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const currentHash = window.location.hash;
+    if (!currentHash) return;
+    const timer = window.setTimeout(() => scrollToSection(currentHash), 80);
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
+
+  const isItemActive = useCallback(
+    (href: string) => {
+      const sectionId = getSectionIdFromHref(href);
+
+      // Dedicated projects/blogs pages
+      if (isPageLink(href)) {
+        if (pathname === href || pathname.startsWith(`${href}/`)) {
+          return true;
+        }
+        // Homepage preview sections
+        return pathname === "/" && sectionId === activeSection;
+      }
+
+      if (pathname !== "/") return false;
+      if (!sectionId) return false;
+
+      if (sectionId === "hero") {
+        return activeSection === "hero" || (!activeSection && !hash);
+      }
+
+      return activeSection === sectionId || hash === sectionId;
+    },
+    [activeSection, hash, pathname],
+  );
+
+  const handleNavClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (isPageLink(href)) {
+        setIsMobileOpen(false);
+        return;
+      }
+
+      const sectionId = getHashId(href);
+      if (!sectionId) return;
+
+      if (pathname === "/") {
+        event.preventDefault();
+        scrollToSection(`#${sectionId}`);
+        setHash(sectionId === "hero" ? "" : sectionId);
+        setIsMobileOpen(false);
+      } else {
+        setIsMobileOpen(false);
+      }
+    },
+    [pathname],
+  );
+
   const sidebarContent = (
     <div className="flex h-full flex-col px-5 py-8">
       <div className="text-center">
-        <Link href="/" className="inline-block" onClick={() => setIsMobileOpen(false)}>
+        <Link
+          href="/#hero"
+          className="inline-block"
+          onClick={(event) => handleNavClick(event, "/#hero")}
+        >
           <ProfileAvatar name={personalInfo.name} />
           <h2 className="mt-3 text-base font-semibold text-foreground">
             {personalInfo.name}
@@ -140,13 +240,14 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
       <nav className="mt-8 flex-1" aria-label="Main navigation">
         <ul className="space-y-1">
           {navigation.map((item) => {
-            const isActive = isActivePath(pathname, item.href);
+            const isActive = isItemActive(item.href);
             const Icon = getNavIcon(item.label);
 
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={(event) => handleNavClick(event, item.href)}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                     isActive
@@ -168,15 +269,22 @@ export function Sidebar({ personalInfo, navigation }: SidebarProps) {
 
   return (
     <>
-      <button
-        type="button"
-        className="fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-sidebar text-foreground lg:hidden"
-        onClick={() => setIsMobileOpen((prev) => !prev)}
-        aria-expanded={isMobileOpen}
-        aria-label={isMobileOpen ? "Close menu" : "Open menu"}
-      >
-        {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      <div className="fixed right-4 top-4 z-50 flex items-center gap-2 lg:right-6 lg:top-6">
+        <ThemeToggle />
+        <button
+          type="button"
+          className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-card/90 text-foreground shadow-lg backdrop-blur-xl lg:hidden"
+          onClick={() => setIsMobileOpen((prev) => !prev)}
+          aria-expanded={isMobileOpen}
+          aria-label={isMobileOpen ? "Close menu" : "Open menu"}
+        >
+          {isMobileOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </button>
+      </div>
 
       {isMobileOpen && (
         <button
