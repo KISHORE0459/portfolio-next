@@ -2,6 +2,7 @@ export { Container } from "./container";
 export { CursorGlow } from "./cursor-glow";
 export { EditorialEntry } from "./editorial-entry";
 export { Footer } from "./footer";
+export { HashRedirect } from "./hash-redirect";
 export { JsonLdScript } from "./json-ld-script";
 export { PortfolioLayout } from "./portfolio-layout";
 export { Section } from "./section";

@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { CursorGlow } from "@/components/shared/cursor-glow";
 import { Footer } from "@/components/shared/footer";
 import { Sidebar } from "@/components/shared/sidebar";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { siteConfig } from "@/config";
 import type { PersonalInfo } from "@/types";
 
@@ -19,7 +18,6 @@ export function PortfolioLayout({
   return (
     <div className="relative min-h-screen bg-background">
       <CursorGlow />
-      <ThemeToggle />
       <Sidebar
         personalInfo={personalInfo}
         navigation={[...siteConfig.navigation]}
